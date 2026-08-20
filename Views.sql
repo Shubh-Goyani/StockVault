@@ -1,4 +1,4 @@
--- 2.1 Portfolio summary: current holdings with unrealized P&L
+-- 1 Portfolio summary: current holdings with unrealized P&L
 CREATE OR REPLACE VIEW vw_portfolio_summary AS
 SELECT
     h.INVESTOR_ID,
@@ -20,7 +20,7 @@ FROM HOLDING h
 JOIN SECURITY s ON s.SECURITY_ID = h.SECURITY_ID
 WHERE h.QUANTITY > 0;
  
--- 2.2 KYC status per investor: doc counts by verification state
+-- 2 KYC status per investor: doc counts by verification state
 CREATE OR REPLACE VIEW vw_investor_kyc_status AS
 SELECT
     i.INVESTOR_ID,
@@ -34,7 +34,7 @@ FROM INVESTOR i
 LEFT JOIN KYC_DOCUMENT k ON k.INVESTOR_ID = i.INVESTOR_ID
 GROUP BY i.INVESTOR_ID, i.FULL_NAME, i.KYC_STATUS;
  
--- 2.3 Broker-client relationships with active plan pricing
+-- 3 Broker-client relationships with active plan pricing
 CREATE OR REPLACE VIEW vw_broker_client_plans AS
 SELECT
     bc.BC_ID,
@@ -57,7 +57,7 @@ JOIN BROKER b ON b.BROKER_ID = bc.BROKER_ID
 LEFT JOIN PLAN_CATALOG pc ON pc.PLAN_TYPE = bc.PLAN_TYPE
 WHERE bc.IS_ACTIVE = TRUE;
  
--- 2.4 Order execution detail: ordered vs filled vs remaining quantity
+-- 4 Order execution detail: ordered vs filled vs remaining quantity
 CREATE OR REPLACE VIEW vw_order_execution_detail AS
 SELECT
     o.ORDER_ID,
@@ -78,8 +78,7 @@ LEFT JOIN TRADE t ON t.ORDER_ID = o.ORDER_ID
 GROUP BY o.ORDER_ID, o.TA_ID, o.SECURITY_ID, s.TICKER, o.SIDE,
          o.ORDER_TYPE, o.QUANTITY, o.STATUS, o.PLACED_AT;
  
--- 2.5 Capital gains with STCG/LTCG classification
--- (India rule of thumb: equity held > 365 days = long-term)
+-- 5 Capital gains with STCG/LTCG classification
 CREATE OR REPLACE VIEW vw_capital_gains_report AS
 SELECT
     cg.CG_ID,
